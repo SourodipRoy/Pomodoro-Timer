@@ -1,0 +1,254 @@
+/* Custom properties for easy color management */
+:root {
+    --black: #000000;
+    --white: #ffffff;
+    --gray-light: #cccccc;
+    --gray-subtle: #999999;
+    --gray-dim-border: #111111; /* Very dim grey for borders */
+    --font-family-body: Arial, sans-serif; 
+    --font-family-timer: 'Inter', sans-serif; /* Using Inter Black for boldness and circle colons */
+}
+
+/* Global Reset and Body Styling */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--black);
+    color: var(--white);
+    font-family: var(--font-family-body);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden; /* Fix: overflow hidden */
+}
+
+/* Timer Container */
+.timer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
+}
+
+/* Goal Input Styling */
+.goal-input-wrapper {
+    margin-bottom: 20px; 
+}
+
+#goal-input {
+    background: none; 
+    border: none;
+    color: var(--gray-subtle);
+    font-size: 16px;
+    text-align: center;
+    width: 300px;
+    padding: 5px;
+    outline: none;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+
+#goal-input::placeholder {
+    color: var(--gray-subtle);
+    opacity: 1; 
+    text-transform: none; 
+    letter-spacing: 4px;
+}
+
+/* --- STATE LABEL (CAPSULE SHAPE) --- */
+.state-label {
+    font-size: 14px; /* Edit: Decrease label size further */
+    color: var(--white);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px; 
+
+    /* Capsule Styles */
+    display: inline-block; 
+    padding: 6px 14px; /* Reduced padding to match smaller font */
+    border: 1px solid rgba(255, 255, 255, 0.2); 
+    border-radius: 9999px; 
+}
+/* ----------------------- */
+
+/* Timer Display - RESPONSIVE FONT SIZE */
+.timer-display {
+    /* Mobile responsiveness: Scales from 6rem up to 10rem on larger screens */
+    font-size: clamp(6rem, 20vw, 10rem); 
+    font-weight: 900; 
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 50px;
+    font-family: var(--font-family-timer); 
+}
+
+/* Reps Counter Styling */
+.reps-completed {
+    font-size: 18px;
+    color: var(--gray-subtle);
+    margin-bottom: 60px;
+    font-weight: bold;
+}
+
+/* Controls (Buttons) */
+.controls {
+    display: flex;
+    gap: 20px;
+}
+
+.control-btn {
+    background-color: var(--gray-dim-border);
+    color: var(--white);
+    border: 1px solid rgba(153, 153, 153, 0.16);
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.2s, color 0.2s;
+    text-transform: uppercase;
+}
+
+.control-btn:hover {
+    background-color: #1a1a1a; 
+    color: var(--gray-light);
+}
+
+.control-btn:active {
+    background-color: #333;
+}
+
+.control-btn i {
+    margin-right: 5px;
+}
+
+/* Icon-only buttons */
+.icon-btn {
+    padding: 10px 15px; 
+}
+
+.icon-btn i {
+    margin-right: 0;
+}
+
+/* --- Modal/Popup Styling --- */
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.85); 
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: var(--black);
+    color: var(--white);
+    padding: 30px;
+    border: 1px solid rgba(153, 153, 153, 0.16);
+    width: 90%;
+    max-width: 450px;
+    border-radius: 10px;
+    text-align: left; 
+    position: relative;
+}
+
+/* Close button icon for Settings Modal (used to handle close/cancel via JS) */
+#settings-modal .modal-content::before {
+    content: '\f00d'; 
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: var(--gray-subtle);
+    cursor: pointer;
+    font-size: 18px;
+    z-index: 1; 
+}
+#settings-modal .modal-content::before:hover {
+    color: var(--white);
+}
+
+/* Settings Grid for inputs */
+.settings-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-bottom: 30px;
+    margin-top: 20px;
+}
+
+.setting-input {
+    width: 100%;
+    padding: 10px;
+    background-color: #1a1a1a; 
+    border: 1px solid var(--gray-dim-border);
+    color: var(--white);
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    appearance: none; 
+}
+
+/* Modal Actions for Buttons */
+.modal-actions {
+    display: flex;
+    justify-content: flex-end; 
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Style for the Reset Defaults button (left-aligned) */
+.modal-actions .reset-defaults-btn {
+    margin-right: auto; 
+    padding: 10px 15px; /* Adjust padding for icon-only button */
+}
+
+/* Base Modal Button Style */
+.modal-btn {
+    padding: 10px 20px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: normal; 
+    font-size: 15px;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+/* 1. Ghost Button (No Background) */
+.modal-btn.ghost {
+    background: none;
+    color: var(--white); 
+    border: 1px solid transparent;
+}
+.modal-btn.ghost:hover {
+    color: var(--gray-light);
+}
+
+/* 2. Primary Light Button */
+.modal-btn.primary-light {
+    background-color: var(--white);
+    color: var(--black);
+    border: 1px solid var(--white);
+}
+.modal-btn.primary-light:hover {
+    background-color: var(--gray-light);
+}

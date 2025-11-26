@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Timer</title>
+    <!-- Link the CSS for styling -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Font Awesome for icons (Start, Reset, Settings) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Load Inter Black font for the bold timer display -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap">
+</head>
+<body>
+
+    <div class="timer-container">
+        <!-- Goal Input Field -->
+        <div class="goal-input-wrapper">
+            <input type="text" id="goal-input" placeholder="Click here to set a goal" maxlength="100">
+        </div>
+
+        <!-- State Label (Pomodoro, Short Break, Long Break) -->
+        <div class="state-label" id="state-label">POMODORO</div>
+        
+        <!-- Timer Display (Responsive sizing handled by CSS) -->
+        <div class="timer-display" id="timer-display">25:00</div>
+
+        <!-- Reps Counter (Renamed to Pomodoros completed) -->
+        <div class="reps-completed">Pomodoros completed: <span id="reps-count">0 / 4</span></div>
+
+        <div class="controls">
+            <!-- Start/Pause Button -->
+            <button id="start-pause-btn" class="control-btn">
+                <i class="fas fa-play"></i> START
+            </button>
+
+            <!-- Reset Button (Timer/Reps Reset) -->
+            <button id="reset-btn" class="control-btn icon-btn">
+                <i class="fas fa-redo-alt"></i>
+            </button>
+
+            <!-- Settings Button -->
+            <button id="settings-btn" class="control-btn icon-btn">
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- --- Modals for Popups --- -->
+
+    <!-- Reset Confirmation Modal -->
+    <div id="reset-modal" class="modal">
+        <div class="modal-content">
+            <h3>Confirm Reset</h3>
+            <p>Are you sure you want to reset the timer and reps?</p>
+            <div class="modal-actions">
+                <button id="cancel-reset" class="modal-btn ghost">Cancel</button>
+                <button id="confirm-reset" class="modal-btn primary-light">Reset</button> 
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <h3 class="modal-title">Settings</h3>
+            <span class="modal-subtitle">Customize your Pomodoro experience</span>
+
+            <div class="settings-grid">
+                <!-- Pomodoro Duration -->
+                <label for="pomodoro-duration" class="setting-label">Pomodoro duration (minutes)</label>
+                <input type="number" id="pomodoro-duration" value="25" min="1" max="60" class="setting-input">
+
+                <!-- Small Break Duration -->
+                <label for="small-break" class="setting-label">Small break duration (minutes)</label>
+                <input type="number" id="small-break" value="5" min="1" max="30" class="setting-input">
+
+                <!-- Pomodoros before Long Break -->
+                <label for="pomodoros-before-long" class="setting-label">Pomodoros before long break</label>
+                <input type="number" id="pomodoros-before-long" value="4" min="1" max="10" class="setting-input">
+
+                <!-- Long Break Duration -->
+                <label for="long-break" class="setting-label">Long break duration (minutes)</label>
+                <input type="number" id="long-break" value="15" min="1" max="60" class="setting-input">
+            </div>
+
+            <div class="modal-actions">
+                <!-- Reset Defaults Button (Icon Only) -->
+                <button id="reset-settings-btn" class="modal-btn ghost reset-defaults-btn icon-btn" title="Reset to Defaults">
+                    <i class="fas fa-undo"></i> 
+                </button>
+                <button id="cancel-settings" class="modal-btn ghost">Cancel</button>
+                <button id="save-settings" class="modal-btn primary-light">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link the JavaScript for interactivity and timer logic -->
+    <script src="script.js"></script>
+</body>
+</html>
+
