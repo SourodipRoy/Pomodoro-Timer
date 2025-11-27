@@ -6,7 +6,7 @@
     --gray-subtle: #999999;
     --gray-dim-border: #111111; /* Very dim grey for borders */
     --font-family-body: Arial, sans-serif; 
-    --font-family-timer: 'Inter', sans-serif; /* Using Inter Black for boldness and circle colons */
+    --font-family-timer: 'Inter', sans-serif; /* Reverting to original Inter font */
 }
 
 /* Global Reset and Body Styling */
@@ -24,7 +24,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    overflow: hidden; /* Fix: overflow hidden */
+    overflow: hidden; 
 }
 
 /* Timer Container */
@@ -38,9 +38,11 @@ body {
     padding: 20px;
 }
 
-/* Goal Input Styling */
+/* Goal Textarea Styling (Supports multi-line up to 100 chars) */
 .goal-input-wrapper {
     margin-bottom: 20px; 
+    width: 90%; /* Allow wider field on small screens */
+    max-width: 400px; /* Max width to prevent massive text line */
 }
 
 #goal-input {
@@ -49,14 +51,19 @@ body {
     color: var(--gray-subtle);
     font-size: 16px;
     text-align: center;
-    width: 300px;
+    width: 100%; /* Take full width of wrapper */
     padding: 5px;
     outline: none;
     text-transform: uppercase;
     letter-spacing: 4px;
 
-    overflow-x: auto;
-    white-space: nowrap;
+    /* Textarea specific styles for wrapping and height */
+    resize: none; /* Disable manual resizing */
+    overflow-y: hidden; /* Hide scrollbar if not needed */
+    height: auto; 
+    min-height: 24px; /* Sufficient for one line */
+    max-height: 60px; /* Allow up to 3-4 lines */
+    line-height: 1.5;
 }
 
 
@@ -69,7 +76,7 @@ body {
 
 /* --- STATE LABEL (CAPSULE SHAPE) --- */
 .state-label {
-    font-size: 14px; /* Edit: Decrease label size further */
+    font-size: 14px; 
     color: var(--white);
     font-weight: bold;
     text-transform: uppercase;
@@ -78,15 +85,16 @@ body {
 
     /* Capsule Styles */
     display: inline-block; 
-    padding: 6px 14px; /* Reduced padding to match smaller font */
+    padding: 6px 14px; 
     border: 1px solid rgba(255, 255, 255, 0.2); 
     border-radius: 9999px; 
 }
 /* ----------------------- */
 
-/* Timer Display - RESPONSIVE FONT SIZE */
+/* Timer Display - FIXED FONT & RESPONSIVE SIZE */
 .timer-display {
-    /* Mobile responsiveness: Scales from 6rem up to 10rem on larger screens */
+    /* Stabilize digits by enforcing fixed width for numbers */
+    font-variant-numeric: tabular-nums; 
     font-size: clamp(6rem, 20vw, 10rem); 
     font-weight: 900; 
     color: var(--white);
@@ -100,6 +108,9 @@ body {
     font-size: 18px;
     color: var(--gray-subtle);
     margin-bottom: 60px;
+}
+
+#reps-count {
     font-weight: bold;
 }
 
@@ -193,7 +204,6 @@ body {
     grid-template-columns: 1fr;
     gap: 15px;
     margin-bottom: 30px;
-    margin-top: 20px;
 }
 
 .setting-input {
@@ -252,3 +262,4 @@ body {
 .modal-btn.primary-light:hover {
     background-color: var(--gray-light);
 }
+

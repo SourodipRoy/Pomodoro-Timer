@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
         pomodorosBeforeLong: 4,
     };
 
-    // --- Audio Elements ---
     const alarm1 = new Audio('alarm.mp3');
     const alarm2 = new Audio('alarm2.mp3');
 
@@ -41,13 +40,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let isRunning = false;
     let intervalId = null;
     let repsCompleted = 0; 
-    let lastTickTime = Date.now(); // Used for background timing robustness
+    let lastTickTime = Date.now();
 
-    // --- Persistence & Initial Load ---
+    function adjustGoalInputHeight() {
+        
+        goalInput.style.height = 'auto'; 
+        goalInput.style.height = goalInput.scrollHeight + 'px'; 
+    }
 
-    /**
-     * Saves the current timer state to localStorage.
-     */
     function saveState() {
         localStorage.setItem('pomodoroSettings', JSON.stringify(settings));
         localStorage.setItem('timerState', JSON.stringify({
@@ -56,16 +56,16 @@ document.addEventListener('DOMContentLoaded', () => {
             isRunning,
             repsCompleted,
         }));
+        localStorage.setItem('goalText', goalInput.value);
     }
 
-    /**
-     * Loads settings and state from localStorage.
-     */
     function loadState() {
+        goalInput.value = localStorage.getItem('goalText') || '';
+        adjustGoalInputHeight();
+
         const storedSettings = localStorage.getItem('pomodoroSettings');
         if (storedSettings) {
             settings = JSON.parse(storedSettings);
-            // Apply loaded settings to inputs
             pomodoroDurationInput.value = settings.pomodoro;
             smallBreakInput.value = settings.shortBreak;
             pomodorosBeforeLongInput.value = settings.pomodorosBeforeLong;
@@ -73,39 +73,33 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const storedState = localStorage.getItem('timerState');
+        let shouldContinueRunning = false;
+
         if (storedState) {
             const state = JSON.parse(storedState);
             totalSeconds = state.totalSeconds;
             currentMode = state.currentMode;
             repsCompleted = state.repsCompleted;
-            isRunning = state.isRunning; 
+            shouldContinueRunning = state.isRunning;
 
             if (totalSeconds <= 0 && currentMode === 'longBreak' && repsCompleted > 0 && repsCompleted % settings.pomodorosBeforeLong === 0) {
-                 // Special case: Timer was completed and saved at 00:00 after long break
-                 completeCycle(false); // Initialize UI to completed state without resetting reps
+                 completeCycle(false); 
                  isRunning = false;
             } else if (totalSeconds <= 0) {
-                 // Time ran out on a segment, reset duration and pause
                  initTimer(currentMode, false);
                  isRunning = false; 
             } else {
                 initTimer(currentMode, true);
+                isRunning = shouldContinueRunning;
             }
         } else {
-            // No state saved, initialize default Pomodoro
             initTimer('pomodoro');
         }
     }
 
-    /**
-     * Initializes the timer for a new cycle mode and updates the label.
-     * @param {string} mode - 'pomodoro', 'shortBreak', or 'longBreak'
-     * @param {boolean} keepTime - If true, keeps existing totalSeconds; otherwise resets to full duration.
-     */
     function initTimer(mode, keepTime = false) {
         currentMode = mode;
 
-        // Update the state label
         stateLabel.textContent = 
             mode === 'pomodoro' ? 'POMODORO' :
             mode === 'shortBreak' ? 'SHORT BREAK' :
@@ -117,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 durationMinutes = settings.pomodoro;
             } else if (mode === 'shortBreak') {
                 durationMinutes = settings.shortBreak;
-            } else { // longBreak
+            } else {
                 durationMinutes = settings.longBreak;
             }
             totalSeconds = durationMinutes * 60;
@@ -127,158 +121,106 @@ document.addEventListener('DOMContentLoaded', () => {
         saveState(); 
     }
 
-    // --- Utility Functions ---
-
-    /**
-     * Formats total seconds into MM:SS string.
-     */
     function formatTime(seconds) {
         const minutes = String(Math.floor(seconds / 60)).padStart(2, '0');
         const remainingSeconds = String(seconds % 60).padStart(2, '0');
         return `${minutes}:${remainingSeconds}`;
     }
 
-    /**
-     * Updates the timer display and rep count display (X/N).
-     */
     function updateDisplay() {
         timerDisplay.textContent = formatTime(totalSeconds);
 
-        // Calculate reps completed in the current set (0 to N-1)
         const currentSetRep = repsCompleted % settings.pomodorosBeforeLong;
 
         repsCountEl.textContent = `${currentSetRep} / ${settings.pomodorosBeforeLong}`;
     }
 
-    // --- Sound Logic ---
-
-    /**
-     * Plays the alarm sound(s) based on the completed cycle with no delay.
-     * @param {string} modeThatJustEnded - 'pomodoro', 'shortBreak', or 'longBreak'
-     */
     function playAlarm(modeThatJustEnded) {
         if (modeThatJustEnded === 'pomodoro' || modeThatJustEnded === 'shortBreak') {
-            // Play alarm.mp3 2 times immediately
-            alarm1.currentTime = 0;
-            alarm1.play();
+            alarm1.load(); 
+            alarm1.play().catch(e => console.error("Alarm playback error:", e));
 
-            // Wait briefly for the first sound to start playing before triggering the second
-            setTimeout(() => {
-                 alarm1.currentTime = 0;
-                 alarm1.play();
-            }, 50); 
+            setTimeout(() => { 
+                 alarm1.load();
+                 alarm1.play().catch(e => console.error("Alarm playback error:", e));
+            }, 100); 
 
         } else if (modeThatJustEnded === 'longBreak') {
-            // Play alarm.mp3 1 time, then alarm2.mp3 1 time immediately
-            alarm1.currentTime = 0;
-            alarm1.play();
+            alarm1.load();
+            alarm1.play().catch(e => console.error("Alarm playback error:", e));
 
-            // Wait briefly for the first sound to start playing before triggering the second
-            setTimeout(() => {
-                alarm2.currentTime = 0;
-                alarm2.play();
-            }, 50); 
+            setTimeout(() => { 
+                alarm2.load();
+                alarm2.play().catch(e => console.error("Alarm2 playback error:", e));
+            }, 100); 
         }
     }
 
-    /**
-     * Stops the timer and resets the display/reps after a full cycle.
-     */
     function completeCycle(resetReps = true) {
         pauseTimer(); 
         totalSeconds = 0;
         if (resetReps) repsCompleted = 0;
 
         updateDisplay();
-        stateLabel.textContent = 'POMODOROS COMPLETED';
+        stateLabel.textContent = 'CYCLE COMPLETE';
 
-        // Ensure state is cleared only if fully reset
         if (resetReps) localStorage.removeItem('timerState');
     }
 
-    // --- Main Timer Logic ---
-
-    /**
-     * Handles the cycle transition when time is up.
-     */
     function timeUp() {
-        totalSeconds = 0; // Ensure it displays 00:00 temporarily
+        totalSeconds = 0;
         pauseTimer(); 
         playAlarm(currentMode); 
 
         if (currentMode === 'pomodoro') {
             repsCompleted++;
 
-            // Check for Long Break
             if (repsCompleted % settings.pomodorosBeforeLong === 0) {
                 initTimer('longBreak');
             } else {
                 initTimer('shortBreak');
             }
         } else if (currentMode === 'longBreak') { 
-            // Stop after long break
             completeCycle();
-            return; // Exit without starting next segment
-        } else { // shortBreak
+            return; 
+        } else {
             initTimer('pomodoro');
         }
-
-        // Auto-start the next segment
         startTimer();
     }
 
-    /**
-     * Decrements the timer every tick, accounting for browser throttling.
-     */
     function tick() {
         const now = Date.now();
-        // Calculate actual elapsed milliseconds since last tick
         const elapsedMs = now - lastTickTime;
 
-        // Calculate actual elapsed seconds (floored)
         const elapsedSeconds = Math.floor(elapsedMs / 1000);
 
-        // If less than a second has passed, wait for the next tick
         if (elapsedSeconds < 1) return;
-
-        // Advance timer by the actual elapsed seconds
         totalSeconds -= elapsedSeconds;
 
-        // Reset last tick time, accounting for the consumed time
-        // E.g., if 1.5s passed, elapsedSeconds is 1. We only update lastTickTime by 1000ms.
         lastTickTime += elapsedSeconds * 1000;
 
         if (totalSeconds > 0) {
             updateDisplay();
             saveState(); 
         } else {
-            // Ensure totalSeconds is not negative before calling timeUp
             totalSeconds = 0; 
             timeUp();
         }
     }
 
-    /**
-     * Starts the timer.
-     */
     function startTimer() {
         if (isRunning) return; 
         isRunning = true;
 
         startPauseBtn.innerHTML = '<i class="fas fa-pause"></i> PAUSE';
 
-        // Initialize last tick time when timer starts
         lastTickTime = Date.now(); 
 
-        // Use a small interval (50ms) to ensure responsiveness, 
-        // while the actual time decrease is calculated inside tick()
         intervalId = setInterval(tick, 50); 
         saveState();
     }
 
-    /**
-     * Pauses the timer.
-     */
     function pauseTimer() {
         if (!isRunning) return;
         isRunning = false;
@@ -290,9 +232,6 @@ document.addEventListener('DOMContentLoaded', () => {
         saveState();
     }
 
-    /**
-     * Resets the timer and reps to initial state.
-     */
     function resetTimer() {
         pauseTimer();
         repsCompleted = 0;
@@ -300,19 +239,8 @@ document.addEventListener('DOMContentLoaded', () => {
         initTimer('pomodoro'); 
     }
 
-    // --- Modal Handlers ---
-
-    function showModal(modalEl) {
-        modalEl.style.display = 'flex';
-    }
-
-    function hideModal(modalEl) {
-        modalEl.style.display = 'none';
-    }
-
-    /**
-     * Resets settings inputs to default values.
-     */
+    function showModal(modalEl) { modalEl.style.display = 'flex'; }
+    function hideModal(modalEl) { modalEl.style.display = 'none'; }
     function resetSettingsToDefaults() {
         pomodoroDurationInput.value = DEFAULT_SETTINGS.pomodoro;
         smallBreakInput.value = DEFAULT_SETTINGS.shortBreak;
@@ -320,7 +248,13 @@ document.addEventListener('DOMContentLoaded', () => {
         longBreakInput.value = DEFAULT_SETTINGS.longBreak;
     }
 
+
     // --- Event Listeners ---
+
+    goalInput.addEventListener('input', () => {
+        adjustGoalInputHeight();
+        saveState();
+    });
 
     // 1. Start/Pause Button
     startPauseBtn.addEventListener('click', () => {
@@ -353,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 6. Reset Settings Button (Icon)
     resetSettingsBtn.addEventListener('click', resetSettingsToDefaults);
 
-    // 7. Click handler for the 'X' (cross icon) in the Settings Modal
+    // 7. Settings Modal Cross (X) functionality & Cancel button
     settingsModalContent.addEventListener('click', (e) => {
         const rect = settingsModalContent.getBoundingClientRect();
         const padding = 20;
@@ -361,7 +295,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const clickY = e.clientY - rect.top;
 
         if (clickX > rect.width - padding*2 && clickY < padding*2) {
-            // Restore input values (cancel unsaved settings)
             loadState(); 
             hideModal(settingsModal);
         }
@@ -369,7 +302,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 8. Cancel Settings (via 'Cancel' button)
     cancelSettingsBtn.addEventListener('click', () => {
-        // Restore input values from currently saved settings (cancel unsaved changes)
         loadState(); 
         hideModal(settingsModal);
     });
@@ -397,20 +329,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         localStorage.setItem('pomodoroSettings', JSON.stringify(settings));
 
-        // Re-initialize timer display with new durations if paused
         if (!isRunning) {
-            initTimer(currentMode, false); // Force update to new duration
+            initTimer(currentMode, false);
         }
 
         hideModal(settingsModal);
     });
 
-    // --- Initialization ---
     loadState(); 
-
-    // Auto-start timer if it was running before refresh
+    
     if (isRunning) {
         startTimer();
     }
 });
-
