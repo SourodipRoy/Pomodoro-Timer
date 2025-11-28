@@ -6,7 +6,7 @@
     --gray-subtle: #999999;
     --gray-dim-border: #111111; /* Very dim grey for borders */
     --font-family-body: Arial, sans-serif; 
-    --font-family-timer: 'Inter', sans-serif; /* Reverting to original Inter font */
+    --font-family-timer: 'Inter', sans-serif; 
 }
 
 /* Global Reset and Body Styling */
@@ -24,7 +24,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    overflow: hidden; 
+    overflow-x: hidden; 
 }
 
 /* Timer Container */
@@ -38,11 +38,48 @@ body {
     padding: 20px;
 }
 
-/* Goal Textarea Styling (Supports multi-line up to 100 chars) */
+/* --- NEW GREETING LABEL STYLING --- */
+.greeting-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* Rectangle with less curved edges */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px; 
+    padding: 15px 25px;
+    margin-bottom: 20px; /* Space between greeting and goal input */
+    background-color: transparent; 
+    width: fit-content;
+}
+
+.greeting-text {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--white);
+    margin-bottom: 5px;
+}
+
+.current-time {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--white);
+    margin-bottom: 2px;
+}
+
+.current-date {
+    font-size: 16px;
+    font-weight: normal; /* Regular */
+    color: var(--gray-subtle);
+}
+/* ---------------------------------- */
+
+
+/* Goal Textarea Styling */
 .goal-input-wrapper {
     margin-bottom: 20px; 
-    width: 90%; /* Allow wider field on small screens */
-    max-width: 400px; /* Max width to prevent massive text line */
+    width: 90%; 
+    max-width: 400px; 
 }
 
 #goal-input {
@@ -51,18 +88,17 @@ body {
     color: var(--gray-subtle);
     font-size: 16px;
     text-align: center;
-    width: 100%; /* Take full width of wrapper */
+    width: 100%; 
     padding: 5px;
     outline: none;
     text-transform: uppercase;
     letter-spacing: 4px;
 
-    /* Textarea specific styles for wrapping and height */
-    resize: none; /* Disable manual resizing */
-    overflow-y: hidden; /* Hide scrollbar if not needed */
+    resize: none; 
+    overflow-y: hidden; 
     height: auto; 
-    min-height: 24px; /* Sufficient for one line */
-    max-height: 60px; /* Allow up to 3-4 lines */
+    min-height: 24px; 
+    max-height: 60px; 
     line-height: 1.5;
 }
 
@@ -85,7 +121,7 @@ body {
 
     /* Capsule Styles */
     display: inline-block; 
-    padding: 6px 14px; 
+    padding: 5px 13px; 
     border: 1px solid rgba(255, 255, 255, 0.2); 
     border-radius: 9999px; 
 }
@@ -93,13 +129,12 @@ body {
 
 /* Timer Display - FIXED FONT & RESPONSIVE SIZE */
 .timer-display {
-    /* Stabilize digits by enforcing fixed width for numbers */
     font-variant-numeric: tabular-nums; 
     font-size: clamp(6rem, 20vw, 10rem); 
     font-weight: 900; 
     color: var(--white);
     line-height: 1;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
     font-family: var(--font-family-timer); 
 }
 
@@ -107,10 +142,7 @@ body {
 .reps-completed {
     font-size: 18px;
     color: var(--gray-subtle);
-    margin-bottom: 60px;
-}
-
-#reps-count {
+    margin-bottom: 50px;
     font-weight: bold;
 }
 
@@ -181,7 +213,7 @@ body {
     position: relative;
 }
 
-/* Close button icon for Settings Modal (used to handle close/cancel via JS) */
+/* Close button icon for Settings Modal */
 #settings-modal .modal-content::before {
     content: '\f00d'; 
     font-family: 'Font Awesome 6 Free';
@@ -196,6 +228,11 @@ body {
 }
 #settings-modal .modal-content::before:hover {
     color: var(--white);
+}
+
+/* Reset Modal Specific Styling */
+#reset-modal .modal-content{
+    text-align: center;
 }
 
 /* Settings Grid for inputs */
@@ -226,10 +263,9 @@ body {
     margin-top: 20px;
 }
 
-/* Style for the Reset Defaults button (left-aligned) */
 .modal-actions .reset-defaults-btn {
     margin-right: auto; 
-    padding: 10px 15px; /* Adjust padding for icon-only button */
+    padding: 10px 15px; 
 }
 
 /* Base Modal Button Style */
@@ -243,7 +279,7 @@ body {
     transition: background-color 0.2s, color 0.2s, border-color 0.2s;
 }
 
-/* 1. Ghost Button (No Background) */
+/* 1. Ghost Button */
 .modal-btn.ghost {
     background: none;
     color: var(--white); 
@@ -262,4 +298,3 @@ body {
 .modal-btn.primary-light:hover {
     background-color: var(--gray-light);
 }
-

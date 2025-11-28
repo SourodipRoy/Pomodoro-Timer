@@ -2,26 +2,36 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pomodoro Timer</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap">
 </head>
 <body>
 
     <div class="timer-container">
-        <div class="goal-input-wrapper">
-            <textarea id="goal-input" placeholder="🎀 what's your goal cutie? 🎀" maxlength="40"></textarea>
+        <div class="greeting-container">
+            <div id="greeting-text" class="greeting-text"></div>
+            <div id="current-time" class="current-time">00:00 AM</div>
+            <div id="current-date" class="current-date"></div>
         </div>
+
+        <div class="goal-input-wrapper">
+            <textarea id="goal-input" placeholder="Click here and set a goal qt, meoww~🐱" maxlength="40"></textarea>
+        </div>
+
         <div class="state-label" id="state-label">POMODORO</div>
+        
         <div class="timer-display" id="timer-display">25:00</div>
+
         <div class="reps-completed">Pomodoros completed: <span id="reps-count">0 / 4</span></div>
 
         <div class="controls">
             <button id="start-pause-btn" class="control-btn">
                 <i class="fas fa-play"></i> START
             </button>
+
             <button id="reset-btn" class="control-btn icon-btn">
                 <i class="fas fa-redo-alt"></i>
             </button>
@@ -32,6 +42,9 @@
         </div>
     </div>
 
+    <!-- Popups -->
+
+    <!-- Reset Confirmation -->
     <div id="reset-modal" class="modal">
         <div class="modal-content">
             <h3>Confirm Reset</h3>
@@ -43,6 +56,7 @@
         </div>
     </div>
 
+    <!-- Settings -->
     <div id="settings-modal" class="modal">
         <div class="modal-content">
             <h3 class="modal-title">Settings</h3>
@@ -54,6 +68,7 @@
 
                 <label for="small-break" class="setting-label">Small break duration (minutes)</label>
                 <input type="number" id="small-break" value="5" min="1" max="30" class="setting-input">
+
                 <label for="pomodoros-before-long" class="setting-label">Pomodoros before long break</label>
                 <input type="number" id="pomodoros-before-long" value="4" min="1" max="10" class="setting-input">
 
@@ -74,4 +89,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
