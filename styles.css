@@ -77,7 +77,7 @@ body {
 
 /* Goal Textarea Styling */
 .goal-input-wrapper {
-    margin-bottom: 20px; 
+    margin-bottom: 0px; 
     width: 90%; 
     max-width: 400px; 
 }
