@@ -117,7 +117,7 @@ body {
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 2px;
-    margin-bottom: 10px; 
+    margin-bottom: 0px; 
 
     /* Capsule Styles */
     display: inline-block; 
@@ -134,7 +134,7 @@ body {
     font-weight: 900; 
     color: var(--white);
     line-height: 1;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     font-family: var(--font-family-timer); 
 }
 
@@ -142,7 +142,7 @@ body {
 .reps-completed {
     font-size: 18px;
     color: var(--gray-subtle);
-    margin-bottom: 50px;
+    margin-bottom: 40px;
     font-weight: bold;
 }
 
