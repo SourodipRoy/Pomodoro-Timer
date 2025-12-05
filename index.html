@@ -2,26 +2,90 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centered OKAY</title>
-    <!-- Load Tailwind CSS from CDN for easy styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Ensure the body and html take up the full viewport height */
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pomodoro Timer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap">
 </head>
-<body class="bg-black flex items-center justify-center h-full">
+<body>
 
-    <!-- The main text container -->
-    <div class="text-white text-9xl font-extrabold p-4">
-        okay
+    <div class="timer-container">
+        <div class="greeting-container">
+            <div id="greeting-text" class="greeting-text"></div>
+            <div id="current-time" class="current-time">00:00 AM</div>
+            <div id="current-date" class="current-date"></div>
+        </div>
+
+        <div class="goal-input-wrapper">
+            <textarea id="goal-input" placeholder="enjoy" maxlength="40"></textarea>
+        </div>
+
+        <div class="state-label" id="state-label">POMODORO</div>
+        
+        <div class="timer-display" id="timer-display">25:00</div>
+
+        <div class="reps-completed">Pomodoros completed: <span id="reps-count">0 / 4</span></div>
+
+        <div class="controls">
+            <button id="start-pause-btn" class="control-btn">
+                <i class="fas fa-play"></i> START
+            </button>
+
+            <button id="reset-btn" class="control-btn icon-btn">
+                <i class="fas fa-redo-alt"></i>
+            </button>
+
+            <button id="settings-btn" class="control-btn icon-btn">
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
     </div>
 
+    <!-- Popups -->
+
+    <!-- Reset Confirmation -->
+    <div id="reset-modal" class="modal">
+        <div class="modal-content">
+            <h3>Confirm Reset</h3>
+            <p>Are you sure you want to reset the timer and reps?</p>
+            <div class="modal-actions">
+                <button id="cancel-reset" class="modal-btn ghost">Cancel</button>
+                <button id="confirm-reset" class="modal-btn primary-light">Reset</button> 
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <h3 class="modal-title">Settings</h3>
+            <span class="modal-subtitle">Customize your Pomodoro experience</span>
+
+            <div class="settings-grid">
+                <label for="pomodoro-duration" class="setting-label">Pomodoro duration (minutes)</label>
+                <input type="number" id="pomodoro-duration" value="25" min="1" max="60" class="setting-input">
+
+                <label for="small-break" class="setting-label">Small break duration (minutes)</label>
+                <input type="number" id="small-break" value="5" min="1" max="30" class="setting-input">
+
+                <label for="pomodoros-before-long" class="setting-label">Pomodoros before long break</label>
+                <input type="number" id="pomodoros-before-long" value="4" min="1" max="10" class="setting-input">
+
+                <label for="long-break" class="setting-label">Long break duration (minutes)</label>
+                <input type="number" id="long-break" value="15" min="1" max="60" class="setting-input">
+            </div>
+
+            <div class="modal-actions">
+                <button id="reset-settings-btn" class="modal-btn ghost reset-defaults-btn icon-btn" title="Reset to Defaults">
+                    <i class="fas fa-undo"></i> 
+                </button>
+                <button id="cancel-settings" class="modal-btn ghost">Cancel</button>
+                <button id="save-settings" class="modal-btn primary-light">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
